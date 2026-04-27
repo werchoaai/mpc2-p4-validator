@@ -442,10 +442,8 @@ pre { border-left: 3px solid var(--mpc-green-light); padding: 12px 16px !importa
 st.markdown(MPC2_CSS, unsafe_allow_html=True)
 
 # Inject a MutationObserver-based translation that replaces English Streamlit
-# text nodes with German. Must run via components.v1.html because Streamlit
-# strips <script> from st.markdown even with unsafe_allow_html.
-# st.html() used below (streamlit >= 1.31)
-
+# text nodes with German. This uses st.html with JavaScript enabled so we can
+# avoid the older iframe-based components helper.
 st.html("""
 <script>
 (function() {
@@ -468,14 +466,14 @@ st.html("""
       }
     });
   }
-  const target = window.parent.document.body || document.body;
+  const target = document.body;
   translate(target);
   new MutationObserver(() => translate(target)).observe(target, {
     childList: true, subtree: true, characterData: true
   });
 })();
 </script>
-""", height=0)
+""", width="content", unsafe_allow_javascript=True)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
